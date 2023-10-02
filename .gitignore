@@ -1,0 +1,12 @@
+node_modules
+package-lock.json
+config/
+resources/static/assets/download/*
+resources/static/assets/uploads/*
+errors.log
+__test__/
+f-admin/
+/public
+public/*
+build.sh
+.env
