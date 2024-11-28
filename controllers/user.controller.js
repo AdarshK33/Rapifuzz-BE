@@ -6,8 +6,6 @@ const path = require("path");
 const bcrypt = require('bcryptjs');
 const sendToken = require("../utils/jwtToken");
 const UserToken = require("../models/user_token.model");
-const Project = require("../models/project.model");
-const UserProject = require("../models/user_project.model");
 
 
 

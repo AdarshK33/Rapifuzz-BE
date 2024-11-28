@@ -51,29 +51,20 @@ const { isAuthenticatedUser } = require("./middlewares/auth");
 
 
 //Import all Routes
-const client = require('./routes/client.routes')
-const project = require('./routes/project.routes')
+
 const auth = require('./routes/auth.routes');
-const task = require('./routes/task.routes');
-const daily_work = require('./routes/daily_work.routes');
+
 const user = require('./routes/user.routes');
-const dashboard = require('./routes/dashboard.routes');
-const appnotification = require('./routes/appnotification.routes');
-const user_project = require('./routes/user_project.routes');
+
 
 const logger = require("./logger");
 
 
 app.use('/api/auth', auth)
 app.use(isAuthenticatedUser)
-app.use('/api/client', client)
-app.use('/api/project', project)
-app.use('/api/task', task)
-app.use('/api/notification', appnotification)
+
 app.use('/api/user', user)
-app.use('/api/dashboard', dashboard)
-app.use('/api/daily-work', daily_work)
-app.use('/api/user_project', user_project)
+
 
 
 
@@ -84,60 +75,10 @@ app.use(errorMiddleware);
 const PORT = process.env.PORT || 8000;
 
 const server = app.listen(PORT, () => {
-  const schedule = require('./schedule')
+  
   console.log(`Server is running on port ${PORT} on ${process.env.NODE_ENV} Environment`);
 })
-/*
-let io = socketIO(server, {
-  cors: {
-    origin: '*',
-  }
-})
 
-const redis = require('redis');
-const client123 = redis.createClient();
-
-// make connection with user from server side
-io.use(function(socket, next){
-  if (socket.handshake.query && socket.handshake.query.token){
-    jwt.verify(socket.handshake.query.token, process.env.JWT_SECRET, function(err, decoded) {
-      if (err) return next(new Error('Authentication error'));
-      socket.decoded = decoded;
-      next();
-    });
-  }
-  else {
-    next(new Error('Authentication error'));
-  }    
-})
-.on('connection', (socket)=>{
-  const subscribe = redis.createClient();
-  subscribe.subscribe('pubsub'); //    listen to messages from channel pubsub
-
-  subscribe.on("message", function(channel, message) {
-    socket.send(message);
-  });
-
-  socket.on('message', function(msg) {
-  });
-
-  socket.on('disconnect', function() {
-      subscribe.quit();
-  });
-
-  socket.on('createMessage', (newMessage)=>{
-    console.log('newMessage', newMessage);
-
-    io.emit('getMessage', newMessage+'hi')
-  });
- 
-  // when server disconnects from user
-  socket.on('disconnect', ()=>{
-    console.log('disconnected from user');
-  });
-});
- 
-*/
 //Handle unhandle Promise rejection
 process.on('unhandledRejection', err => {
   console.log('Shutting down the server due to unhandled promise rejection');

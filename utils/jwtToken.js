@@ -26,20 +26,24 @@ const sendToken = async (user, statuscode, res) => {
      }
     
     let today = new Date();
-    const nextWeek = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate() + 7 * 1,
-        today.getHours(),
-        today.getMinutes(),
-        today.getSeconds(),
-        today.getMilliseconds()
-    );
+    // const nextWeek = new Date(
+    //     today.getFullYear(),
+    //     today.getMonth(),
+    //     today.getDate() + 7 * 1,
+    //     today.getHours(),
+    //     today.getMinutes(),
+    //     today.getSeconds(),
+    //     today.getMilliseconds()
+    // );
+
+    const tokenValidityMs = parseInt(process.env.TOKEN_VALIDITY || 7200000, 10); // Default to 2 hours
+    const nextValidTill = new Date(Date.now() + tokenValidityMs);
+
      // Create a Vendor
      const userToken = new UserToken({
         user_id: user[0].user_id,
         token_id: token,
-        valid_till : nextWeek
+        valid_till : nextValidTill
      });
  
      await UserToken.create(userToken)
