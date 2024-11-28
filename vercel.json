@@ -1,14 +1,14 @@
 {
   "version": 1,
-  "name": "nodejs-mysql",
-  "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
-  ],
+  "name": "nodejs -mysql",
+  "builds":  [
+    { "src": "server.js",  "use": "@vercel/node" }
+   ],
 
-  "routes": [
-    {
-        "src": "/(.*)",
-        "dest": "/"
-    }
-   ]
-}
+  "routes":[
+     {
+      "src": "/(.*)",
+      "dest": "/"
+     }
+    ]
+ }
