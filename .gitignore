@@ -7,7 +7,7 @@ build.sh
 package-lock.json
 config/
 atic/assets/download/*
-resources/static/assets/uploads/
+resources/static/assets/uploads/*
 __test__/
 f-admin/
 node_modules
