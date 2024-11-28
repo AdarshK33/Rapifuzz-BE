@@ -12,33 +12,25 @@ const User = function (user) {
 
 
 User.create = (user) => {
+  console.log(user,"hello modal")
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO users SET ?", user, (err, res) => {
+
+      console.log("hello")
       if (err) {
         reject(err)
         return;
       }
       let user_id = "";
-      if (user.role === 'admin') {
+     
         user_id = `ADMIN-${res.insertId}`
-      } else if (user.role === 'manager') {
-        user_id = `MNGR-${res.insertId}`
-      } else if (user.role === 'user') {
-        user_id = `USER-${res.insertId}`
-      }
-      sql.query("UPDATE users SET user_id=? WHERE id=?", [user_id, res.insertId], (err, res1) => {
-        resolve({ user_id: user_id, user });
+     sql.query("UPDATE users SET user_id=? WHERE id=?", [user_id, res.insertId], (err, res1) => {
+       
+      resolve({ user_id: user_id, user });
         return
       })
 
-      //create mapping user_projects table
-      sql.query("INSERT INTO user_projects (user_id) VALUES(?)", [user_id], (err, res) => {
-        if (err) {
-          reject(err)
-          return;
-        }
-        resolve(res);
-      })
+    
     })
   })
 }

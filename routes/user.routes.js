@@ -5,8 +5,8 @@ const { authorizeRoles } = require('../middlewares/auth')
 
 const uploadUserPic = require('../middlewares/uploadUserPic')
 
-router.route('/new').post(authorizeRoles('admin'), add)
-router.route('/all').get(authorizeRoles('admin', 'manager', 'user'), all)
+router.route('/new').post(add)
+
 router.route('/delete/:user_id').delete(authorizeRoles('admin'), deleteUser)
 router.route('/change-profile-pic').post(authorizeRoles('admin', 'manager', 'user'), uploadUserPic.single("profile_pic_file"), changeUserPic)
 router.route('/myprofile').get(authorizeRoles('admin', 'manager', 'user'),getUserProfile)

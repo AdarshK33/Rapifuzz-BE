@@ -61,7 +61,7 @@ const logger = require("./logger");
 
 
 app.use('/api/auth', auth)
-app.use(isAuthenticatedUser)
+// app.use(isAuthenticatedUser)
 
 app.use('/api/user', user)
 

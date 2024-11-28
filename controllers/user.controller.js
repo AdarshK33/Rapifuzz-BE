@@ -12,20 +12,21 @@ const UserToken = require("../models/user_token.model");
 
 //Add  User
 exports.add = catchAsyncErrors(async (req, res, next) => {
-  let { name, email, password, role, status, email_password, current_project, designation, ...rest } = req.body
+  let { name, email, password,  ...rest } = req.body
   const other = Object.keys(rest)
+  console.log("hello1",req.body)
   other.map(e => {
     return next(new ErrorHandler(`Please remove unwanted fields ${e} from request body`, 400))
   })
 
+
+ 
   let validation = new Validator(req.body, {
     name: 'required',
     email: ['required', 'email'],
     password: 'required',
-    role: [{ 'in': ['admin', 'manager', 'user'] }],
-    status: [{ 'in': ['Active', 'In Active'] }],
-    designation: [{ 'in': ['Tester', 'Developer', 'BA', 'HR', 'Sr. Developer', ' Data Analyst', 'Lead', 'Project Manager'] }]
-  });
+    
+    });
 
   const checkEmail = await User.findByEmail(req.body.email)
   if (checkEmail) {
@@ -46,11 +47,6 @@ exports.add = catchAsyncErrors(async (req, res, next) => {
       name: req.body.name,
       email: req.body.email,
       password: password,
-      role: req.body.role,
-      status: req.body.status,
-      email_password: req.body.email_password,
-      current_project: req.body.current_project || 0,
-      designation: req.body.designation
     }
 
     const userCreate = await User.create(user);
@@ -62,73 +58,16 @@ exports.add = catchAsyncErrors(async (req, res, next) => {
   }
 })
 
-
-// Retrieve all
-exports.all = catchAsyncErrors(async (req, res, next) => {
-  const user_id = req.query.user_id
-  const name = req.query.name
-  const status = req.query.status
-  const email = req.query.email
-  const role = req.query.role
-  const project_id = req.query.project_id
-  const current_project = req.query.current_project
-  const designation = req.query.designation
-
-
-
-  let perPage = req.query.per_page
-  let pageNumber = req.query.page_number
-
-  perPage = perPage === "all" ? "" : perPage
-
-  let searchKey = req.query.searchKey
-
-  if (perPage < 0 || pageNumber < 0) {
-    perPage = "";
-    pageNumber = "";
-  }
-
-  let final_data = await User.getAll(user_id, name, email, role, status, perPage, pageNumber, searchKey, current_project, designation, process.env.HOST_URL)
-
-  if (project_id) {
-    const project_data = await Project.getProjectbyId(project_id);
-    if (project_data) {
-      const all_proj_users = project_data.project_user_ids + ''.split(',')
-      let final_user_data = final_data.filter(e => all_proj_users.includes(e.user_id))
-      let final_manager_data = final_data.filter(e => project_data.project_manager_id === e.user_id)
-
-      final_user_data = [...final_user_data, final_manager_data[0]]
-      final_data = final_user_data
-      console.log("final_datafinal_data", final_data, final_user_data, final_manager_data[0]);
-    }
-  }
-
-  res.status(200).json({
-    status: true,
-    data: final_data
-  })
-})
-
 // Delete the User
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
   const user_id = req.params.user_id
 
   const user_data = await User.getUserbyId(user_id);
-  const roleData = await UserProject.isValidRole(user_id) //fetching from user table
-  const checkCurrentProjectCount = await UserProject.isValidCurrentProject(user_id) //its giving integer 0,1,2.., fetching from user table
-  // console.log(checkCurrentProjectCount, "checkCurrentProjectCount")
+  
   if (!user_data) {
     return next(new ErrorHandler(`Invalid user id`, 400))
   }
-  if (checkCurrentProjectCount !== 0) {
-    return next(new ErrorHandler(`${roleData} is active in a project`, 400))
-  }
-
-
   await User.deleteUserbyId(user_id)
-  await UserProject.deleteUserProjectbyUserId(user_id) //user project deleting user + projecct id
-
-
   res.status(200).json({
     status: true,
     message: "User deleted successfully!"
