@@ -9,4 +9,3 @@ f-admin/
 /public
 public/*
 build.sh
-.env
