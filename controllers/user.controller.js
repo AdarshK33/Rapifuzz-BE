@@ -1,207 +1,212 @@
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
-let Validator = require('validatorjs');
+let Validator = require("validatorjs");
 const User = require("../models/user.model");
 const path = require("path");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 const sendToken = require("../utils/jwtToken");
 const UserToken = require("../models/user_token.model");
 
-
-
-
 //Add  User
 exports.add = catchAsyncErrors(async (req, res, next) => {
-  let { name, email, password,  ...rest } = req.body
-  const other = Object.keys(rest)
-  console.log("hello1",req.body)
-  other.map(e => {
-    return next(new ErrorHandler(`Please remove unwanted fields ${e} from request body`, 400))
-  })
+  let { name, email, password, ...rest } = req.body;
+  const other = Object.keys(rest);
+  console.log("hello1", req.body);
+  other.map((e) => {
+    return next(
+      new ErrorHandler(
+        `Please remove unwanted fields ${e} from request body`,
+        400
+      )
+    );
+  });
 
-
- 
   let validation = new Validator(req.body, {
-    name: 'required',
-    email: ['required', 'email'],
-    password: 'required',
-    
-    });
+    name: "required",
+    email: ["required", "email"],
+    password: "required",
+  });
 
-  const checkEmail = await User.findByEmail(req.body.email)
+  const checkEmail = await User.findByEmail(req.body.email);
   if (checkEmail) {
-    return next(new ErrorHandler("Sorry! given email is already taken", 400))
+    return next(new ErrorHandler("Sorry! given email is already taken", 400));
   }
 
-  let errObj = null
+  let errObj = null;
   validation.checkAsync(null, () => {
-    errObj = validation.errors.all()
+    errObj = validation.errors.all();
     for (const errProp in errObj) {
-      return next(new ErrorHandler(errObj[errProp], 400))
+      return next(new ErrorHandler(errObj[errProp], 400));
     }
   });
 
   if (!errObj) {
-    password = await bcrypt.hash(req.body.password, 10)
+    password = await bcrypt.hash(req.body.password, 10);
     const user = {
       name: req.body.name,
       email: req.body.email,
       password: password,
-    }
+    };
 
     const userCreate = await User.create(user);
 
     res.status(201).json({
       success: true,
-      message: "User added successfully!"
-    })
+      message: "User added successfully!",
+    });
   }
-})
+});
 
 // Delete the User
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
-  const user_id = req.params.user_id
+  const user_id = req.params.user_id;
 
   const user_data = await User.getUserbyId(user_id);
-  
+
   if (!user_data) {
-    return next(new ErrorHandler(`Invalid user id`, 400))
+    return next(new ErrorHandler(`Invalid user id`, 400));
   }
-  await User.deleteUserbyId(user_id)
+  await User.deleteUserbyId(user_id);
   res.status(200).json({
     status: true,
-    message: "User deleted successfully!"
-  })
-})
+    message: "User deleted successfully!",
+  });
+});
 
 // Change user pic
 exports.changeUserPic = catchAsyncErrors(async (req, res, next) => {
-
   const __basedir = path.resolve();
 
   if (req.file == undefined) {
     return res.status(400).send("Please upload profile pic (Image file only)!");
   }
 
-  let uploadedpath = "/resources/static/assets/uploads/userpic/" + req.file.filename;
+  let uploadedpath =
+    "/resources/static/assets/uploads/userpic/" + req.file.filename;
 
-  const data = await User.updateProfilePicPath(req.user.email, uploadedpath)
+  const data = await User.updateProfilePicPath(req.user.email, uploadedpath);
 
   res.status(200).json({
     success: true,
-    path: uploadedpath
-  })
+    path: uploadedpath,
+  });
 });
-
 
 // Change user pic
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
-
   const __basedir = path.resolve();
 
-  const user_profile = await User.getUserProfile(req.user, process.env.HOST_URL)
+  const user_profile = await User.getUserProfile(
+    req.user,
+    process.env.HOST_URL
+  );
   res.status(200).json({
     success: true,
-    user_profile
-  })
+    user_profile,
+  });
 });
 
 exports.getUser = catchAsyncErrors(async (req, res, next) => {
-
-  const user_id = req.params.user_id
+  const user_id = req.params.user_id;
   const user_data = await User.getUserbyId(user_id);
 
-
   if (!user_data) {
-    return next(new ErrorHandler(`Invalid user id`, 400))
+    return next(new ErrorHandler(`Invalid user id`, 400));
   }
 
   res.status(200).json({
     status: true,
-    data: user_data
-  })
-})
+    data: user_data,
+  });
+});
 
 //Login  User => /api/login
 exports.update = catchAsyncErrors(async (req, res, next) => {
-
-  const user_data = await User.getUserbyId(req.user.user_id)
+  const user_data = await User.getUserbyId(req.user.user_id);
   if (!user_data) {
-    return next(new ErrorHandler('User not found', 400))
+    return next(new ErrorHandler("User not found", 400));
   }
 
-
-  let name = req.body.name ? req.body.name : user_data.name
-  let email_password = req.body.email_password ? req.body.email_password : user_data.email_password
+  let name = req.body.name ? req.body.name : user_data.name;
+  let email_password = req.body.email_password
+    ? req.body.email_password
+    : user_data.email_password;
 
   const data = await User.updateByHim(name, email_password, req.user.user_id);
 
   res.status(200).json({
     success: true,
-    message: "Profile updated!"
-  })
-})
+    message: "Profile updated!",
+  });
+});
 
 //Login  User => /api/login
 exports.updateByAdmin = catchAsyncErrors(async (req, res, next) => {
-
-  const user_id = req.params.user_id
+  const user_id = req.params.user_id;
   const user_data = await User.getUserbyId(user_id);
 
   if (!user_data) {
-    return next(new ErrorHandler('User not found', 400))
+    return next(new ErrorHandler("User not found", 400));
   }
 
-
-  let name = req.body.name ? req.body.name : user_data.name
-  let email = req.body.email ? req.body.email : user_data.email
-  let email_password = req.body.email_password ? req.body.email_password : user_data.email_password
-  let role = req.body.role ? req.body.role : user_data.role
-  let status = req.body.status ? req.body.status : user_data.status
-  let password = req.body.password ? await bcrypt.hash(req.body.password, 10) : user_data.password
-  let designation = req.body.designation ? req.body.designation : user_data.designation
-
+  let name = req.body.name ? req.body.name : user_data.name;
+  let email = req.body.email ? req.body.email : user_data.email;
+  let email_password = req.body.email_password
+    ? req.body.email_password
+    : user_data.email_password;
+  let role = req.body.role ? req.body.role : user_data.role;
+  let status = req.body.status ? req.body.status : user_data.status;
+  let password = req.body.password
+    ? await bcrypt.hash(req.body.password, 10)
+    : user_data.password;
+  let designation = req.body.designation
+    ? req.body.designation
+    : user_data.designation;
 
   if (user_id === req.user.user_id) {
-    role = req.user.role
+    role = req.user.role;
   }
 
   if (user_id === req.user.user_id) {
-    status = req.user.status
+    status = req.user.status;
   }
 
-  if (!['admin', 'manager', 'user'].includes(role)) {
-    return next(new ErrorHandler("Invalid user role", 400))
+  if (!["admin", "manager", "user"].includes(role)) {
+    return next(new ErrorHandler("Invalid user role", 400));
   }
 
-  if (!['Active', 'In Active'].includes(status)) {
-    return next(new ErrorHandler("Invalid user status", 400))
+  if (!["Active", "In Active"].includes(status)) {
+    return next(new ErrorHandler("Invalid user status", 400));
   }
 
-  const checkEmail = await User.findByEmailForUserUpdate(email, user_id)
+  const checkEmail = await User.findByEmailForUserUpdate(email, user_id);
   if (checkEmail) {
-    return next(new ErrorHandler("Sorry! given email is already taken", 400))
+    return next(new ErrorHandler("Sorry! given email is already taken", 400));
   }
 
-  const data = await User.update(name, password, email, email_password, role, status, designation, user_id);
+  const data = await User.update(
+    name,
+    password,
+    email,
+    email_password,
+    role,
+    status,
+    designation,
+    user_id
+  );
 
   res.status(200).json({
     success: true,
-    data
-  })
-})
+    data,
+  });
+});
 
 // Delete the client related projects and tasks
 exports.logoutUser = catchAsyncErrors(async (req, res, next) => {
-
-  await UserToken.deleteToken(req.user.user_id, req.user.token_id)
+  await UserToken.deleteToken(req.user.user_id, req.user.token_id);
 
   res.status(200).json({
     status: true,
-    message: "Logout successfull"
-  })
-})
-
-
-
-
+    message: "Logout successfull",
+  });
+});
