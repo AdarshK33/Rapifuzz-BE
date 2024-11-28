@@ -1,6 +1,5 @@
 const multer = require("multer");
-const path =  require("path")
-
+const path = require("path");
 
 const excelFilter = (req, file, cb) => {
   if (
@@ -10,10 +9,9 @@ const excelFilter = (req, file, cb) => {
     cb(null, true);
   } else {
     cb("Please upload only excel file.", false);
-    return next(new ErrorHandler("No access granted", 403))
+    return next(new ErrorHandler("No access granted", 403));
   }
 };
-
 
 const __basedir = path.resolve();
 
@@ -26,5 +24,5 @@ var storage = multer.diskStorage({
   },
 });
 
-var uploadFile = multer({ storage: storage, fileFilter: excelFilter });
-module.exports = uploadFile;
+var uploadFile =multer({ storage: storage, fileFilter: excelFilter });
+module.exports =uploadFile;

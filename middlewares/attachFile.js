@@ -1,5 +1,5 @@
 const multer = require("multer");
-const path =  require("path")
+const path = require("path");
 const ErrorHandler = require("../utils/errorHandler");
 
 // const pdfFilter = (req, file, cb) => {
@@ -9,7 +9,6 @@ const ErrorHandler = require("../utils/errorHandler");
 //     return cb(new ErrorHandler("Please upload xlsx or pdf file", 403))
 //   }
 // };
-
 
 const __basedir = path.resolve();
 
@@ -23,5 +22,5 @@ var storage = multer.diskStorage({
 });
 
 //var attachFile = multer({ storage: storage, fileFilter: pdfFilter });
-var attachFile = multer({ storage: storage});
+var attachFile = multer({ storage: storage });
 module.exports = attachFile;

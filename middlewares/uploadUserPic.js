@@ -1,5 +1,5 @@
 const multer = require("multer");
-const path = require("path")
+const path = require("path");
 const ErrorHandler = require("../utils/errorHandler");
 
 // const imgFilter = (req, file, cb) => {
@@ -19,10 +19,11 @@ const imgFilter = (req, file, cb) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    return cb(new ErrorHandler("Please upload an image file (PNG, JPG, JPEG)", 403));
+    return cb(
+      new ErrorHandler("Please upload an image file (PNG, JPG, JPEG)", 403)
+    );
   }
 };
-
 
 const __basedir = path.resolve();
 
