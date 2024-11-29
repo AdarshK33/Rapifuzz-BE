@@ -48,15 +48,27 @@ const auth = require("./routes/auth.routes");
 
 const user = require("./routes/user.routes");
 const comment = require("./routes/comment.routes");
+const like = require("./routes/like.routes");
+const post = require("./routes/post.routes");
+const relation = require("./routes/relation.routes");
+
+
+
 
 
 const logger = require("./logger");
-
 app.use("/api/auth", auth);
 // app.use(isAuthenticatedUser)
 
 app.use("/api/user", user);
 app.use("/api/comment", comment);
+app.use("/api/like", like);
+app.use("/api/post", post);
+app.use("/api/relation", relation);
+
+
+
+
 
 
 
