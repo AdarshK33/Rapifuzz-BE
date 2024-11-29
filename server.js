@@ -47,6 +47,8 @@ const { isAuthenticatedUser } = require("./middlewares/auth");
 const auth = require("./routes/auth.routes");
 
 const user = require("./routes/user.routes");
+const comment = require("./routes/comment.routes");
+
 
 const logger = require("./logger");
 
@@ -54,6 +56,8 @@ app.use("/api/auth", auth);
 // app.use(isAuthenticatedUser)
 
 app.use("/api/user", user);
+app.use("/api/comment", comment);
+
 
 
 //Middleware to handle errors
