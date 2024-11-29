@@ -4,44 +4,26 @@ const ErrorHandler = require("../utils/errorHandler");
 let Validator = require("validatorjs");
 
 exports.addStory = catchAsyncErrors(async (req, res, next) => {
-  const { userid ,...rest } = req.body;
-  const other = Object.keys(rest);
-  other.map((e) => {
-    return next(
-      new ErrorHandler(
-        `Please remove unwanted fields ${e} from request body`,
-        400
-      )
-    );
-  });
+ 
+  const userid = req.params.userid;
 
-  let validation = new Validator(req.body, {
-    userid: "required",
-   
-  });
-
-  let errObj = null;
-  validation.checkAsync(null, () => {
-    errObj = validation.errors.all();
-    for (const errProp in errObj) {
-      return next(new ErrorHandler(errObj[errProp], 400));
+ 
+    if (req.file == undefined) {
+      return res.status(400).send("Please upload profile pic (Image file only)!");
     }
-  });
-
-
-  if (!errObj) {
-    const storyObj = {
-        userid,
   
-    };
-  const storyCreate = await Story.create(storyObj);
+  let uploadedpath = "/resources/static/assets/uploads/userpic/" + req.file.filename;
+  const storyCreate = await Story.create(uploadedpath,userid,);
+
+
 
   res.status(201).json({
     success: true,
     message: "Story has been added!",
+    path: uploadedpath,
     data: storyCreate,
   });
-}
+
 });
 
 

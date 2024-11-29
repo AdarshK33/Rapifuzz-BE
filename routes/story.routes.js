@@ -5,7 +5,7 @@ const {
 } = require("../controllers/story.controller");
 const router =express.Router();
 // const { authorizeRoles } = require("../middlewares/auth");
-
-router.route("/new").post(addStory);
+const uploadUserPic = require('../middlewares/uploadUserPic')
+router.route("/new/:userid").get(uploadUserPic.single("profile_pic_file"),addStory);
 router.route('/story-data/:userid').get(getStory)
 module.exports =router;
