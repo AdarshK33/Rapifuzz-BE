@@ -11,7 +11,6 @@ const UserToken = require("../models/user_token.model");
 exports.add = catchAsyncErrors(async (req, res, next) => {
   let { name, email, password, userName, gender,phoneNumber, ...rest } = req.body;
   const other = Object.keys(rest);
-  console.log("hello1", req.body);
   other.map((e) => {
     return next(
       new ErrorHandler(

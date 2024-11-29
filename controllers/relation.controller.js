@@ -1,10 +1,10 @@
-const Comment = require("../models/comment.model"); // Ensure the correct path
+const Relation = require("../models/relation.model"); // Ensure the correct path
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 let Validator = require("validatorjs");
 
-exports.addComment = catchAsyncErrors(async (req, res, next) => {
-  const { desc, postid, userid ,...rest } = req.body;
+exports.addRelation = catchAsyncErrors(async (req, res, next) => {
+  const { followeruserid, followeduserid ,...rest } = req.body;
   const other = Object.keys(rest);
   other.map((e) => {
     return next(
@@ -16,9 +16,8 @@ exports.addComment = catchAsyncErrors(async (req, res, next) => {
   });
 
   let validation = new Validator(req.body, {
-    desc: "required",
-    postid: "required",
-    userid:  "required",
+    followeruserid: "required",
+    followeduserid:  "required",
   });
 
   let errObj = null;
@@ -31,37 +30,35 @@ exports.addComment = catchAsyncErrors(async (req, res, next) => {
 
 
   if (!errObj) {
-    const comment = {
-      desc,
-      userid,
-      postid,
+    const relationObj = {
+      followeruserid,
+    followeduserid,
     };
-  const commentCreate = await Comment.create(comment);
+  const relationCreate = await Relation.create(relationObj);
 
   res.status(201).json({
     success: true,
-    message: "Comment has been added!",
-    data: commentCreate,
+    message: "Relation has been added!",
+    data: relationCreate,
   });
 }
 });
 
 
-exports.getComment = catchAsyncErrors(async (req, res, next)=> {
+exports.getRelation = catchAsyncErrors(async (req, res, next)=> {
 
-    const postid = req.params.postid
+    const followedUserId = req.params.followedUserId
   
-    const comment_data = await Comment.getCommentById(postid);
-    if(!comment_data){
+    const followedUser_data = await Relation.getRelationById(followedUserId);
+
+    console.log("followedUser_data",followedUser_data)
+    if(!followedUser_data){
       return next(new ErrorHandler(`The entered post ID is invalid`, 400))
     }
-    const cleanedData = comment_data.map((comment) => {
-        const { userId, ...rest } = comment; // Destructure and exclude `userId`
-        return rest;
-      });
+   
     res.status(200).json({
       status: true,
-      data: cleanedData
+      data: followedUser_data
     })
   })
   
