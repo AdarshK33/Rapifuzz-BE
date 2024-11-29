@@ -444,4 +444,40 @@ User.getUsersbyAdmin = () => {
   });
 };
 
+
+User.checkFieldExists = (field, value) => {
+  return new Promise((resolve, reject) => {
+    // Dynamically create the query using the field name
+    const query = `SELECT * FROM users WHERE ${field} = ?`;
+    
+    sql.query(query, [value], (err, res) => {
+      if (err) {
+        return reject(err); // Reject with the error
+      }
+      if (res.length === 0) {
+        return resolve(false); // Resolve with false if the field is not found
+      }
+      resolve(res[0]); // Resolve with the user record if the field exists
+    });
+  });
+};
+
+
+User.findUserByField = (field, value) => {
+  return new Promise((resolve, reject) => {
+    // Dynamically create the query to search based on the field
+    const query = `SELECT * FROM users WHERE ${field} = ?`;
+    
+    sql.query(query, [value], (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      if (res.length == 0) {
+        resolve(null);  // No user found
+      }
+      resolve(res);  // Found user
+    });
+  });
+};
+
 module.exports = User;

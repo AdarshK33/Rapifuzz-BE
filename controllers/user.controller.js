@@ -9,7 +9,7 @@ const UserToken = require("../models/user_token.model");
 
 //Add  User
 exports.add = catchAsyncErrors(async (req, res, next) => {
-  let { name, email, password, ...rest } = req.body;
+  let { name, email, password, userName, gender,phoneNumber, ...rest } = req.body;
   const other = Object.keys(rest);
   console.log("hello1", req.body);
   other.map((e) => {
@@ -25,12 +25,33 @@ exports.add = catchAsyncErrors(async (req, res, next) => {
     name: "required",
     email: ["required", "email"],
     password: "required",
+    userName:  "required",
+    gender: "required",
+    phoneNumber:  "required",
   });
 
-  const checkEmail = await User.findByEmail(req.body.email);
-  if (checkEmail) {
-    return next(new ErrorHandler("Sorry! given email is already taken", 400));
-  }
+  // const checkEmail = await User.findByEmail(req.body.email);
+  // if (checkEmail) {
+  //   return next(new ErrorHandler("Sorry! given email is already taken", 400));
+  // }
+  // Check if email already exists
+const checkEmail = await User.checkFieldExists('email', req.body.email);
+if (checkEmail) {
+  return next(new ErrorHandler("Sorry! Given email is already taken", 400));
+}
+
+// Check if username already exists
+const checkUserName = await User.checkFieldExists('userName', req.body.userName);
+if (checkUserName) {
+  return next(new ErrorHandler("Sorry! Given username is already taken", 400));
+}
+
+// Check if phone number already exists
+const checkPhoneNumber = await User.checkFieldExists('phoneNumber', req.body.phoneNumber);
+if (checkPhoneNumber) {
+  return next(new ErrorHandler("Sorry! Given phone number is already taken", 400));
+}
+
 
   let errObj = null;
   validation.checkAsync(null, () => {
@@ -46,6 +67,9 @@ exports.add = catchAsyncErrors(async (req, res, next) => {
       name: req.body.name,
       email: req.body.email,
       password: password,
+      userName: req.body.userName,
+      gender: req.body.gender,
+      phoneNumber: req.body.phoneNumber
     };
 
     const userCreate = await User.create(user);

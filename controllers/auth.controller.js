@@ -13,37 +13,49 @@ const { getResetEmailTemplate } = require("../utils/emailTemplate.js");
 const UserToken = require("../models/user_token.model.js");
 
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, userName, phoneNumber } = req.body;
 
-  //Check if user entered username and password
-  if (!email || !password) {
-    return next(new ErrorHandler("Please enter email & password", 400));
+  // Check if user entered email, username, or phone number and password
+  if (!email && !userName && !phoneNumber || !password) {
+    return next(new ErrorHandler("Please enter email, username, phone number & password", 400));
   }
 
-  let user = await User.findByEmail(email);
+  // Determine which field to use for login (email, username, or phoneNumber)
+  let field = '';
+  let value = '';
+  if (email) {
+    field = 'email';
+    value = email;
+  } else if (userName) {
+    field = 'userName';
+    value = userName;
+  } else if (phoneNumber) {
+    field = 'phoneNumber';
+    value = phoneNumber;
+  }
+
+  // Fetch user by the appropriate field (email, username, or phone number)
+  let user = await User.findUserByField(field, value);
 
   if (!user) {
-    return next(new ErrorHandler("Invalid Username or Password", 401));
+    return next(new ErrorHandler("Invalid Email, Username or Password", 401));
   }
 
   if (user[0].status === "In Active") {
     return next(new ErrorHandler("User is disabled", 401));
   }
 
-  //user[0].status = await this.checkUserStatus(user[0])
-
-  //Checks if password is correct or not
-  const isPasswordMatched = await User.comparePassword(
-    password,
-    user[0].password
-  );
+  // Check if password is correct
+  const isPasswordMatched = await User.comparePassword(password, user[0].password);
 
   if (!isPasswordMatched) {
-    return next(new ErrorHandler("Invalid Email or Password", 401));
+    return next(new ErrorHandler("Invalid Email, Username or Password", 401));
   }
 
+  // Send authentication token (assuming `sendToken` is implemented elsewhere)
   await sendToken(user, 200, res);
 });
+
 
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
   const { email, ...rest } = req.body;

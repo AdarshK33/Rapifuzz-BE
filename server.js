@@ -58,7 +58,7 @@ app.use("/api/user", user);
 
 //Middleware to handle errors
 
-app.use(errorMiddleware)
+app.use(errorMiddleware)  
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8000;
