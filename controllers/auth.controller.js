@@ -56,7 +56,6 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   await sendToken(user, 200, res);
 });
 
-
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
   const { email, ...rest } = req.body;
   const other = Object.keys(rest);
