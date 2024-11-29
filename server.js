@@ -51,6 +51,8 @@ const comment = require("./routes/comment.routes");
 const like = require("./routes/like.routes");
 const post = require("./routes/post.routes");
 const relation = require("./routes/relation.routes");
+const story = require("./routes/story.routes");
+
 
 
 
@@ -65,6 +67,8 @@ app.use("/api/comment", comment);
 app.use("/api/like", like);
 app.use("/api/post", post);
 app.use("/api/relation", relation);
+app.use("/api/story", story);
+
 
 
 
