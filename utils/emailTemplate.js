@@ -1,6 +1,3 @@
-
-
-
 exports.getResetEmailTemplate = (name, link) => {
   let a = `<!doctype html>
   <html>
@@ -353,7 +350,7 @@ exports.getResetEmailTemplate = (name, link) => {
                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                       <tr>
                         <td>
-                          <p>Hi `
+                          <p>Hi `;
   let b = `</p>
   <p>A request has been received to change the password for your StackHolders account.</p>
   <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
@@ -363,7 +360,7 @@ exports.getResetEmailTemplate = (name, link) => {
           <table role="presentation" border="0" cellpadding="0" cellspacing="0">
             <tbody>
               <tr>
-                <td> <a href="`
+                <td> <a href="`;
   let c = `" target="_blank">Reset Password</a> </td>
   </tr>
 </tbody>
@@ -405,12 +402,9 @@ exports.getResetEmailTemplate = (name, link) => {
 </tr>
 </table>
 </body>
-</html>`
+</html>`;
 
-let message = a + '' + name + '' + b + '' + link + '' + c
+  let message = a + "" + name + "" + b + "" + link + "" + c;
 
-return message
-
-}
-
-
+  return message;
+};
