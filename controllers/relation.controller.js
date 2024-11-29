@@ -53,7 +53,7 @@ exports.getRelation = catchAsyncErrors(async (req, res, next)=> {
 
     console.log("followedUser_data",followedUser_data)
     if(!followedUser_data){
-      return next(new ErrorHandler(`The entered post ID is invalid`, 400))
+      return next(new ErrorHandler(`The entered followed ID is invalid`, 400))
     }
    
     res.status(200).json({
