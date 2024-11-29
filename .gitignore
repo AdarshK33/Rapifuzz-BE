@@ -10,4 +10,4 @@ resources/static/assets/uploads/*
 __test__/
 f-admin/
 node_modules
-
+ProcFile

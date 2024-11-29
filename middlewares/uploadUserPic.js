@@ -32,7 +32,7 @@ var storage = multer.diskStorage({
     cb(null, __basedir + "/resources/static/assets/uploads/userpic/");
   },
   filename: (req, file, cb) => {
-    cb(null, `${req.user.user_id}-${Date.now()}-${file.originalname}`);
+    cb(null, `${"image-admin"}-${Date.now()}-${file.originalname}`);
   },
 });
 
