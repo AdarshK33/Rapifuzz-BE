@@ -38,6 +38,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
     }
 
     req.user = {
+      id:user.id,
       user_id: user.user_id,
       name: user.name,
       email: user.email,

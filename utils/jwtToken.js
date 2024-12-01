@@ -15,6 +15,7 @@ const sendToken = async (user, statuscode, res) => {
   };
 
   const user_data = {
+    id: user[0].id,
     user_id: user[0].user_id,
     name: user[0].name,
     email: user[0].email,

@@ -26,7 +26,7 @@ User.create = (user) => {
         "UPDATE users SET user_id=? WHERE id=?",
         [user_id, res.insertId],
         (err, res1) => {
-          resolve({ user_id: user_id, user });
+          resolve({ user_id: user_id, res1 });
           return;
         }
       );
