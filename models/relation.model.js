@@ -20,39 +20,60 @@ Relation.create = (relation) => {
   });
 };
 Relation.getRelationById = (id) => {
-    return new Promise((resolve, reject) => {
-//    console.log("getRelationById",id)
-        const sqlQuery= "SELECT followerUserId FROM relationships WHERE followedUserId = ?";
+  return new Promise((resolve, reject) => {
+    //    console.log("followeruserid",userid)
+    const sqlQuery = "SELECT * FROM relationships WHERE followeruserid = ?";
 
-      sql.query(sqlQuery, [id], (err, res) => {
-       
-        if (err) {
-            reject(err);
-            return;
-          }
-          resolve(res);
-        });
+    sql.query(sqlQuery, [id], (err, res) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(res);
     });
-
+  });
 };
 
-Relation.deleteRelationship = (followerUserId,followedUserId) => {
-   // followedUserId/ req.body
-    return new Promise((resolve, reject) => {
-   
-        const sqlQuery=  "DELETE FROM relationships WHERE `followerUserId` = ? AND `followedUserId` = ?";
+Relation.deleteRelationship = (followerUserId, followedUserId) => {
+  // followedUserId/ req.body
+  return new Promise((resolve, reject) => {
+    const sqlQuery =
+      "DELETE FROM relationships WHERE `followerUserId` = ? AND `followedUserId` = ?";
 
-      sql.query(sqlQuery, [followerUserId,followedUserId], (err, res) => {
-       
-        if (err) {
-            reject(err);
-            return;
-          }
-          resolve(res);
-        });
+    sql.query(sqlQuery, [followerUserId, followedUserId], (err, res) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(res);
     });
-
+  });
 };
 
+Relation.findFriend = (userObj) => {
+  const { id } = userObj;
+
+  return new Promise((resolve, reject) => {
+    // SQL query to find users who are not followed by the given user
+    const sqlQuery = `
+      SELECT u.id, u.name, u.userName
+      FROM users u
+      WHERE u.id != ?
+      AND u.id NOT IN (
+        SELECT f.followeduserid   
+        FROM relationships f 
+        WHERE f.followeruserid = ?
+      );
+    `;
+    // Execute the query
+    sql.query(sqlQuery, [id, id], (err, res) => {
+      if (err) {
+        reject(err); // Handle errors
+        return;
+      }
+      resolve(res); // Return results
+    });
+  });
+};
 
 module.exports = Relation;
