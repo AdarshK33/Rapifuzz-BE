@@ -8,7 +8,7 @@ const UserToken = require("../models/user_token.model");
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   // cookie based token
   //const token = req.cookies ? req.cookies.token : req.headers['authorization'];
-
+ 
   // For localhost:3000
   const bearerHearder = req.headers["authorization"];
   if (!bearerHearder) {
@@ -25,6 +25,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const user = await User.isValidEmail(decoded.email);
+  console.log(user,"hello user")
   if (!user) {
     return next(new ErrorHandler("No access granted", 403));
   } else {
@@ -33,6 +34,8 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
     }
 
     const isUserTokenValid = await UserToken.isValidToken(user.user_id, token);
+  console.log(isUserTokenValid,"hello isUserTokenValid")
+
     if (!isUserTokenValid) {
       return next(new ErrorHandler("Invalid user token", 401));
     }
