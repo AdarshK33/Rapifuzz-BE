@@ -27,7 +27,7 @@ const Story = function (story) {
 //     })
 //   });
 // };
-Story.getStoryById = (id) => {
+Story.getStoryById = (id,host) => {
   return new Promise((resolve, reject) => {
     //    console.log("getRelationById",id)
     const sqlQuery = `SELECT *
@@ -39,7 +39,14 @@ Story.getStoryById = (id) => {
         reject(err);
         return;
       }
-      resolve(res);
+    
+
+      const info = res.map(user => ({
+        id: user.id,
+        userid: user.userid,
+        img: user.img ? encodeURI(host + user.img) : ""
+      }));
+      resolve(info); // Return results
     });
   });
 };
