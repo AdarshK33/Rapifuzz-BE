@@ -50,15 +50,15 @@ Relation.deleteRelationship = (followerUserId, followedUserId) => {
   });
 };
 
-Relation.findFriend = (userObj) => {
-  const { id } = userObj;
+Relation.findFriend = (id,host) => {
+ // const { id } = userObj;
 
   return new Promise((resolve, reject) => {
     // SQL query to find users who are not followed by the given user
     const sqlQuery = `
-      SELECT u.id, u.name, u.userName
+      SELECT u.id, u.name, u.userName,u.avatar
       FROM users u
-      WHERE u.id != ?
+      WHERE u.id != ?  
       AND u.id NOT IN (
         SELECT f.followeduserid   
         FROM relationships f 
@@ -71,7 +71,15 @@ Relation.findFriend = (userObj) => {
         reject(err); // Handle errors
         return;
       }
-      resolve(res); // Return results
+      
+
+      const info = res.map(user => ({
+        name: user.name,
+        userName: user.userName,
+        id: user.id,
+        avatar: user.avatar ? encodeURI(host + user.avatar) : ""
+      }));
+      resolve(info); // Return results
     });
   });
 };

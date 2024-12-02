@@ -63,40 +63,14 @@ exports.getRelation = catchAsyncErrors(async (req, res, next)=> {
   })
 
 exports.followFriend = catchAsyncErrors(async (req, res, next) => {
-    const { id ,...rest } = req.body;
-    const other = Object.keys(rest);
-    other.map((e) => {
-      return next(
-        new ErrorHandler(
-          `Please remove unwanted fields ${e} from request body`,
-          400
-        )
-      );
-    });
-  
-    let validation = new Validator(req.body, {
-      id : "required",
-    });
-  
-    let errObj = null;
-    validation.checkAsync(null, () => {
-      errObj = validation.errors.all();
-      for (const errProp in errObj) {
-        return next(new ErrorHandler(errObj[errProp], 400));
-      }
-    });
-  
-  
-    if (!errObj) {
-      const relationObj = {
-        id
-      };
-    const relationMake = await Relation.findFriend(relationObj);
-  console.log("relationMake",relationMake)
+ 
+  const userid = req.params.userid
+    const relationMake = await Relation.findFriend(userid, process.env.HOST_URL);
+//  console.log("relationMake",relationMake)
     res.status(200).json({
       success: true,
       message: "Find friend has been searched!",
       data: relationMake,
     });
-  }
+  
   });
