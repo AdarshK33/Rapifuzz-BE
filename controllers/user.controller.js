@@ -99,7 +99,7 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
 // Change user pic
 exports.changeUserPic = catchAsyncErrors(async (req, res, next) => {
   const __basedir = path.resolve();
-
+  const user_id = req.params.user_id;
   if (req.file == undefined) {
     return res.status(400).send("Please upload profile pic (Image file only)!");
   }
@@ -107,7 +107,7 @@ exports.changeUserPic = catchAsyncErrors(async (req, res, next) => {
   let uploadedpath =
     "/resources/static/assets/uploads/userpic/" + req.file.filename;
 
-  const data = await User.updateProfilePicPath(req.user.email, uploadedpath);
+  const data = await User.updateProfilePicPath(user_id, uploadedpath);
 
   res.status(200).json({
     success: true,

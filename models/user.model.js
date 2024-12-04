@@ -216,11 +216,11 @@ User.getJwtToken = function (email) {
   });
 };
 
-User.updateProfilePicPath = (email, file_path) => {
+User.updateProfilePicPath = (user_id, file_path) => {
   return new Promise((resolve, reject) => {
     sql.query(
-      "UPDATE users SET avatar = ? WHERE email=?",
-      [file_path, email],
+      "UPDATE users SET avatar = ? WHERE user_id=?",
+      [file_path, user_id],
       (err, res) => {
         if (err) {
           reject(null);
@@ -337,69 +337,6 @@ User.getUserProfile = (user, host) => {
   });
 };
 
-User.isManagerIsValid = (manager_id) => {
-  return new Promise((resolve, reject) => {
-    sql.query(
-      "SELECT * FROM users WHERE user_id=? AND role=?",
-      [manager_id, "manager"],
-      (err, res) => {
-        if (err) reject(false);
-
-        if (res.length === 0) resolve(false);
-        resolve(true);
-      }
-    );
-  });
-};
-
-User.isUsersValid = (users) => {
-  return new Promise((resolve, reject) => {
-    sql.query(
-      "SELECT * FROM `users` WHERE `user_id` IN (?) AND role='user'",
-      [users],
-      (err, res) => {
-        if (err) reject(false);
-
-        if (res === undefined || res.length === 0) {
-          resolve(false);
-          return;
-        }
-
-        if (users.length !== res.length) {
-          resolve(false);
-          return;
-        }
-
-        resolve(true);
-      }
-    );
-  });
-};
-
-User.isUsersValidWhileAdding = (users) => {
-  return new Promise((resolve, reject) => {
-    sql.query(
-      "SELECT * FROM `users` WHERE `user_id` IN (?) AND (role='user' OR role='manager')",
-      [users],
-      (err, res) => {
-        if (err) reject(false);
-
-        if (res === undefined || res.length === 0) {
-          resolve(false);
-          return;
-        }
-
-        if (users.length !== res.length) {
-          resolve(false);
-          return;
-        }
-
-        resolve(true);
-      }
-    );
-  });
-};
-
 User.getUserbyId = (user_id) => {
   return new Promise((resolve, reject) => {
     sql.query("SELECT * FROM users WHERE user_id=?", user_id, (err, res) => {
@@ -409,14 +346,6 @@ User.getUserbyId = (user_id) => {
   });
 };
 
-User.getUserbyRole = (role) => {
-  return new Promise((resolve, reject) => {
-    sql.query("SELECT * FROM users WHERE role=?", role, (err, res) => {
-      if (err) reject(null);
-      resolve(res[0]);
-    });
-  });
-};
 
 User.deleteUserbyId = (user_id) => {
   return new Promise((resolve, reject) => {
@@ -428,19 +357,6 @@ User.deleteUserbyId = (user_id) => {
         resolve(res);
       }
     );
-  });
-};
-
-User.getUsersbyAdmin = () => {
-  return new Promise((resolve, reject) => {
-    sql.query("SELECT * FROM users", null, (err, res) => {
-      if (err) reject(null);
-      if (res) {
-        resolve(res);
-      } else {
-        resolve([]);
-      }
-    });
   });
 };
 
@@ -467,7 +383,6 @@ User.findUserByField = (field, value) => {
   return new Promise((resolve, reject) => {
     // Dynamically create the query to search based on the field
     const query = `SELECT * FROM users WHERE ${field} = ?`;
-    
     sql.query(query, [value], (err, res) => {
       if (err) {
         return reject(err);
@@ -479,5 +394,6 @@ User.findUserByField = (field, value) => {
     });
   });
 };
+
 
 module.exports = User;
