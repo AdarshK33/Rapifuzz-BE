@@ -31,7 +31,7 @@ exports.getStory= catchAsyncErrors(async (req, res, next)=> {
 
     const userid = req.params.userid
   
-    const userid_data = await Story.getStoryById(userid);
+    const userid_data = await Story.getStoryById(userid,process.env.HOST_URL);
 
     // console.log("followedUser_data",userid_data)
     if(!userid_data){

@@ -61,7 +61,7 @@ const story = require("./routes/story.routes");
 const logger = require("./logger");
 app.use("/api/auth", auth);
 // app.use(isAuthenticatedUser)
-
+// 
 app.use("/api/user", user);
 app.use("/api/comment", comment);
 app.use("/api/like", like);

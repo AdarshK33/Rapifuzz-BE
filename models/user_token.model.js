@@ -20,6 +20,8 @@ UserToken.create = (userToken) => {
 };
 
 UserToken.isValidToken = (user_id, token_id) => {
+
+  console.log("user_id, token_id",token_id)
   return new Promise((resolve, reject) => {
     sql.query(
       `SELECT * FROM user_tokens WHERE user_id = ? AND token_id = ? AND valid_till > NOW()`,

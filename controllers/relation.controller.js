@@ -61,4 +61,16 @@ exports.getRelation = catchAsyncErrors(async (req, res, next)=> {
       data: followedUser_data
     })
   })
+
+exports.followFriend = catchAsyncErrors(async (req, res, next) => {
+ 
+  const userid = req.params.userid
+    const relationMake = await Relation.findFriend(userid, process.env.HOST_URL);
+//  console.log("relationMake",relationMake)
+    res.status(200).json({
+      success: true,
+      message: "Find friend has been searched!",
+      data: relationMake,
+    });
   
+  });

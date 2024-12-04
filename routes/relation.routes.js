@@ -1,11 +1,15 @@
 const express =require("express");
 const {
     addRelation,
-    getRelation
+    getRelation,
+    followFriend
 } = require("../controllers/relation.controller");
 const router =express.Router();
-// const { authorizeRoles } = require("../middlewares/auth");
+const { authorizeRoles } = require("../middlewares/auth");
 
 router.route("/new").post(addRelation);
+// router.route("/findFriend").post(followFriend);
+router.route("/find-friend/:userid").get(followFriend);
+
 router.route('/relation-data/:followedUserId').get(getRelation)
 module.exports =router;
