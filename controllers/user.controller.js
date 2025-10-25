@@ -7,6 +7,8 @@ const bcrypt = require("bcryptjs");
 const sendToken = require("../utils/jwtToken");
 const UserToken = require("../models/user_token.model");
 
+
+
 //Add  User
 exports.add = catchAsyncErrors(async (req, res, next) => {
   let { name, email, password, userName, gender,phoneNumber, ...rest } = req.body;

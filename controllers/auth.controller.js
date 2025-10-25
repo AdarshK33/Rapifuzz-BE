@@ -12,6 +12,7 @@ let Validator = require("validatorjs");
 const { getResetEmailTemplate } = require("../utils/emailTemplate.js");
 const UserToken = require("../models/user_token.model.js");
 
+
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password, userName, phoneNumber } = req.body;
 

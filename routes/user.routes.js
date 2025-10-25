@@ -15,6 +15,7 @@ const uploadUserPic = require("../middlewares/uploadUserPic");
 
 router.route("/new").post(add);
 
+
 router.route("/delete/:user_id").delete( deleteUser);
 router.route("/change-profile-pic/:user_id").post(uploadUserPic.single("profile_pic_file"), changeUserPic);
 router.route("/myprofile").get( getUserProfile);

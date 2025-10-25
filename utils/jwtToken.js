@@ -7,6 +7,7 @@ const sendToken = async (user, statuscode, res) => {
   
   const token = User.getJwtToken(user[0].email);
 
+  
   //Options for cookie
   const options = {
     expires: new Date(

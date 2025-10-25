@@ -7,6 +7,7 @@ const developmentLogger = () => {
   const myFormat = printf(({ level, message, timestamp }) => {
     return `${timestamp} ${level}: ${message}`;
   });
+  
 
   return createLogger({
     level: "debug",

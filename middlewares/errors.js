@@ -12,6 +12,7 @@ module.exports = (err, req, res, next) => {
       stack: err.stack,
     });
   }
+  
 
   if (process.env.NODE_ENV === "production") {
     let error = { ...err };

@@ -9,6 +9,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   // cookie based token
   //const token = req.cookies ? req.cookies.token : req.headers['authorization'];
  
+  
   // For localhost:3000
   const bearerHearder = req.headers["authorization"];
   if (!bearerHearder) {

@@ -13,6 +13,7 @@ const ErrorHandler = require("../utils/errorHandler");
 //   }
 // };
 
+
 const imgFilter = (req, file, cb) => {
   const allowedMimeTypes = ["image/png", "image/jpeg", "image/jpg"];
 

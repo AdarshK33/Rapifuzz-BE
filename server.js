@@ -14,6 +14,8 @@ app.use(
   express.urlencoded({ extended: true })
 ); /* bodyParser.urlencoded() is deprecated */
 
+
+
 //Default route
 // app.get("/", (req, res) => {
 //   application.use("/public", express.static(path.join(__dirname, 'public')));

@@ -216,6 +216,8 @@ User.getJwtToken = function (email) {
   });
 };
 
+
+
 User.updateProfilePicPath = (user_id, file_path) => {
   return new Promise((resolve, reject) => {
     sql.query(

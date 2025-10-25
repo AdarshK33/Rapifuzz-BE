@@ -9,6 +9,7 @@ const productionLogger = () => {
     // format: winston.format.simple(),
     format: combine(timestamp(), json()),
 
+    
     defaultMeta: { service: "user-service" },
     transports: [
       new transports.Console(),
