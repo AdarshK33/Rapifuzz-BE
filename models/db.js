@@ -13,12 +13,11 @@
 //   }
 //   console.log('Connected to MySQL successfully!');
 // });
-
-const mysql = require("mysql");
+const mysql = require('mysql2');
 const dbConfig = require("../config/db.config.js");
 
 var connection = mysql.createPool({
-  timezone: "utc",
+  // timezone: "utc",
   dateStrings: ["DATE", "DATETIME"],
   host: dbConfig.HOST,
   user: dbConfig.USER,
@@ -32,3 +31,4 @@ connection.getConnection((err, conn) => {
 });
 
 module.exports = connection;
+
