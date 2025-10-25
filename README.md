@@ -10,4 +10,5 @@ Please go to file (./env) ,(./config) ,(./model/db.js) set the Database connecti
 
 To run the application please run the command in termial:- npm run start
 
+
 please check the API in your system through postman. http://localhost:8000/
